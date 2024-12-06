@@ -1,0 +1,8 @@
+ext {
+    extName = 'LXHentai'
+    extClass = '.LxHentai'
+    extVersionCode = 11
+    isNsfw = true
+}
+
+apply from: "$rootDir/common.gradle"

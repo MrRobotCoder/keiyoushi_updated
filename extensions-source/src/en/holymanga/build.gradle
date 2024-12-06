@@ -1,0 +1,10 @@
+ext {
+    extName = 'HolyManga'
+    extClass = '.HolyManga'
+    themePkg = 'zbulu'
+    baseUrl = 'https://w33.holymanga.net'
+    overrideVersionCode = 3
+    isNsfw = true
+}
+
+apply from: "$rootDir/common.gradle"

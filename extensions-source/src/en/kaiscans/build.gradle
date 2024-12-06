@@ -1,0 +1,10 @@
+ext {
+    extName = 'Lua Scans (Unoriginal)'
+    extClass = '.LuaScans'
+    themePkg = 'mangathemesia'
+    baseUrl = 'https://ponvi.online'
+    overrideVersionCode = 6
+    isNsfw = true
+}
+
+apply from: "$rootDir/common.gradle"

@@ -1,0 +1,7 @@
+ext {
+    extName = 'Flame Comics'
+    extClass = '.FlameComics'
+    extVersionCode = 37
+}
+
+apply from: "$rootDir/common.gradle"

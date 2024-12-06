@@ -1,0 +1,10 @@
+ext {
+    extName = 'NekoScans'
+    extClass = '.NekoScans'
+    themePkg = 'zeistmanga'
+    baseUrl = 'https://www.nekoscans.org'
+    overrideVersionCode = 23
+    isNsfw = true
+}
+
+apply from: "$rootDir/common.gradle"

@@ -1,0 +1,10 @@
+ext {
+    extName = 'HentaiVN.plus'
+    extClass = '.HentaiVNPlus'
+    themePkg = 'madara'
+    baseUrl = 'https://hentaivn.now'
+    overrideVersionCode = 5
+    isNsfw = true
+}
+
+apply from: "$rootDir/common.gradle"

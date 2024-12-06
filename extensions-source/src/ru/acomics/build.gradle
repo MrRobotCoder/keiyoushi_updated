@@ -1,0 +1,8 @@
+ext {
+    extName = 'AComics'
+    extClass = '.AComics'
+    extVersionCode = 4
+    isNsfw = true
+}
+
+apply from: "$rootDir/common.gradle"

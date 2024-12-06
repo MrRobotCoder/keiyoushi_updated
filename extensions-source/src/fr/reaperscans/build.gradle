@@ -1,0 +1,9 @@
+ext {
+    extName = 'Reaper Scans'
+    extClass = '.ReaperScans'
+    themePkg = 'keyoapp'
+    baseUrl = 'https://reaper-scans.fr'
+    overrideVersionCode = 4
+}
+
+apply from: "$rootDir/common.gradle"

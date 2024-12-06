@@ -1,0 +1,10 @@
+ext {
+    extName = 'AllHentai'
+    extClass = '.AllHentai'
+    themePkg = 'grouple'
+    baseUrl = 'https://z.ahen.me'
+    overrideVersionCode = 24
+    isNsfw = true
+}
+
+apply from: "$rootDir/common.gradle"

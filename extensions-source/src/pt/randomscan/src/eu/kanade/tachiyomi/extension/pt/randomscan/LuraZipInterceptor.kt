@@ -30,7 +30,7 @@ class LuraZipInterceptor : ZipInterceptor() {
     }
 
     override fun requestIsZipImage(request: Request): Boolean {
-        return request.url.pathSegments.contains("9f8e078ec1ea")
+        return request.url.pathSegments.contains("cap-download")
     }
 
     override fun zipGetByteStream(request: Request, response: Response): InputStream {

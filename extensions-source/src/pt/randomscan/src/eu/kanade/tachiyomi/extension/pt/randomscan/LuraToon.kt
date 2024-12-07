@@ -172,7 +172,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
         val capSlug = capitulo.slug.trimStart('/')
         val mangaUrl = manga.url.trimEnd('/').trimStart('/')
         setUrlWithoutDomain("/api/obra/$mangaUrl/$capSlug")
-        name = capitulo.num.toString() // .removeSuffix(".0")
+        name = capitulo.num.toString().removeSuffix(".0")
         date_upload = runCatching {
             dateFormat.parse(capitulo.data)!!.time
         }.getOrDefault(0L)
@@ -183,10 +183,15 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
 
     override fun pageListParse(response: Response): List<Page> {
-        val capitulo = response.parseAs<CapituloPaginaDTO>()
-        val pathSegments = response.request.url.pathSegments
-        return (0 until capitulo.files).map { i ->
-            Page(i, baseUrl, "$baseUrl/api/cap-download/${capitulo.obra.id}/${capitulo.id}/${pathSegments[3]}")
+        return try {
+            val capitulo = response.parseAs<CapituloPaginaDTO>()
+            val pathSegments = response.request.url.pathSegments
+
+            (0 until capitulo.files).map { i ->
+                Page(i, baseUrl, "$baseUrl/api/cap-download/${capitulo.obra.id}/${capitulo.id}/${pathSegments[3]}")
+            }
+        } catch (e: Exception) {
+            throw Exception("Não posso encontrar as páginas do capítulo: ${e.message}")
         }
     }
 

@@ -52,7 +52,6 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override val client = network.cloudflareClient
         .newBuilder()
         .addInterceptor(::loggedVerifyInterceptor)
-        // .addInterceptor(LuraZipInterceptor()::zipImageInterceptor)
         .rateLimit(3)
         .setRandomUserAgent(
             preferences.getPrefUAType(),
@@ -114,7 +113,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
 
     // ============================== Details =============================
 
-    override fun getMangaUrl(manga: SManga) = "$baseUrl/${manga.url.trimStart('/')}"
+    override fun getMangaUrl(manga: SManga) = "$baseUrl${manga.url}"
 
     override fun mangaDetailsRequest(manga: SManga): Request {
         return GET("$baseUrl/api/obra/${manga.url.trimStart('/')}", headers)
@@ -186,9 +185,9 @@ class LuraToon : HttpSource(), ConfigurableSource {
 
     override fun pageListParse(response: Response): List<Page> {
         val capitulo = response.parseAs<CapituloPaginaDTO>()
-        val pathSegments = response.request.url.pathSegments
+        // val pathSegments = response.request.url.pathSegments
         return (0 until capitulo.files).map { i ->
-            Page(i, baseUrl, "$baseUrl/api/9f8e078ec1ea/${capitulo.obra.id}/${capitulo.id}/${pathSegments[3]}")
+            Page(i, baseUrl, "$baseUrl/api/9f8e078ec1ea/${capitulo.obra.id}/${capitulo.id}/1}")
         }
     }
 

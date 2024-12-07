@@ -25,6 +25,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
+import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
 import uy.kohesive.injekt.Injekt
@@ -62,7 +63,9 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override fun latestUpdatesRequest(page: Int) = GET("$baseUrl/api/main/?part=${page - 1}", headers)
     override fun popularMangaRequest(page: Int) = GET("$baseUrl/api/main/?part=${page - 1}", headers)
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList) = GET("$baseUrl/api/autocomplete/$query", headers)
-    override fun chapterListRequest(manga: SManga) = GET("$baseUrl/${manga.url.trimStart('/')}", headers)
+    override fun chapterListRequest(manga: SManga): Request {
+        return GET("$baseUrl/${manga.url.trimStart('/')}", headers)
+    }
     override fun mangaDetailsRequest(manga: SManga) = chapterListRequest(manga)
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) {
@@ -106,7 +109,8 @@ class LuraToon : HttpSource(), ConfigurableSource {
     }
 
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
-        return client.newCall(chapterListRequest(manga))
+        val apiRequest = GET("$baseUrl/api/obra/${manga.url.trimStart('/')}", headers)
+        return client.newCall(apiRequest)
             .asObservable()
             .map { response ->
                 chapterListParse(manga, response)

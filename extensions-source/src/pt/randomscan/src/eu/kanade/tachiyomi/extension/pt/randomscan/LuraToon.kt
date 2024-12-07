@@ -22,10 +22,6 @@ import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -151,8 +147,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override fun chapterListRequest(manga: SManga) = mangaDetailsRequest(manga)
 
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
-        val apiRequest = chapterListRequest(manga)
-        return client.newCall(apiRequest)
+        return client.newCall(chapterListRequest(manga))
             .asObservable()
             .map { response ->
                 chapterListParse(manga, response)
@@ -185,30 +180,13 @@ class LuraToon : HttpSource(), ConfigurableSource {
 
     // ============================== Pages ===============================
 
-    /*override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
+    override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
 
     override fun pageListParse(response: Response): List<Page> {
         val capitulo = response.parseAs<CapituloPaginaDTO>()
         val pathSegments = response.request.url.pathSegments
         return (0 until capitulo.files).map { i ->
             Page(i, baseUrl, "$baseUrl/api/9f8e078ec1ea/${capitulo.obra.id}/${capitulo.id}/${pathSegments[3]}")
-        }
-    }*/
-
-    override fun imageUrlParse(response: Response) = ""
-
-    override fun pageListRequest(chapter: SChapter): Request {
-        val chapterCode = chapter.url.substringAfterLast("/")
-        val payload = """{"capSlug":"$chapterCode"}"""
-            .toRequestBody("application/json".toMediaType())
-        return POST("$baseUrl/api/484d2a13/dom%C3%ADnio-absoluto/19/", headers, payload)
-    }
-
-    override fun pageListParse(response: Response): List<Page> {
-        val capitulo = response.parseAs<CapituloPaginaDTO>()
-        val pathSegments = response.request.url.pathSegments
-        return response.parseAs<CapituloPaginaDTO>().files.mapIndexed { index, imageUrl ->
-            Page(baseUrl, imageUrl = "$baseUrl/api/9f8e078ec1ea/${capitulo.obra.id}/${capitulo.id}/${pathSegments[3]}")
         }
     }
 

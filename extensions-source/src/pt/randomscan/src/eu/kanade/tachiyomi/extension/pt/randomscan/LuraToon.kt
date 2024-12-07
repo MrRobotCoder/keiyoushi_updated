@@ -112,7 +112,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     }
 
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
-        return client.newCall(chapterListApiRequest(manga))
+        return client.newCall(chapterListRequest(manga))
             .asObservable()
             .map { response ->
                 chapterListParse(manga, response)

@@ -171,7 +171,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     private fun chapterFromElement(manga: SManga, capitulo: CapituloDTO) = SChapter.create().apply {
         val capSlug = capitulo.slug.trimStart('/')
         val mangaUrl = manga.url.trimEnd('/').trimStart('/')
-        setUrlWithoutDomain("/api/484d2a13/$mangaUrl/$capSlug")
+        setUrlWithoutDomain("/api/obra/$mangaUrl/$capSlug")
         name = capitulo.num.toString().removeSuffix(".0")
         date_upload = runCatching {
             dateFormat.parse(capitulo.data)!!.time
@@ -186,7 +186,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
         val capitulo = response.parseAs<CapituloPaginaDTO>()
         val pathSegments = response.request.url.pathSegments
         return (0 until capitulo.files).map { i ->
-            Page(i, baseUrl, "$baseUrl/api/9f8e078ec1ea/${capitulo.obra.id}/${capitulo.id}/${pathSegments[3]}")
+            Page(i, baseUrl, "$baseUrl/api/cap-download/${capitulo.obra.id}/${capitulo.id}/${pathSegments[3]}")
         }
     }
 

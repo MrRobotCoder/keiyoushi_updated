@@ -62,7 +62,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override fun latestUpdatesRequest(page: Int) = GET("$baseUrl/api/main/?part=${page - 1}", headers)
     override fun popularMangaRequest(page: Int) = GET("$baseUrl/api/main/?part=${page - 1}", headers)
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList) = GET("$baseUrl/api/autocomplete/$query", headers)
-    override fun chapterListRequest(manga: SManga) = GET("$baseUrl/api/obra/${manga.url.trimStart('/')}", headers)
+    override fun chapterListRequest(manga: SManga) = GET("$baseUrl/api/${manga.url.trimStart('/')}", headers)
     override fun mangaDetailsRequest(manga: SManga) = chapterListRequest(manga)
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) {
@@ -128,7 +128,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     private fun chapterFromElement(manga: SManga, capitulo: Capitulo) = SChapter.create().apply {
         val capSlug = capitulo.slug.trimStart('/')
         val mangaUrl = manga.url.trimEnd('/').trimStart('/')
-        setUrlWithoutDomain("/api/s$mangaUrl/$capSlug")
+        setUrlWithoutDomain("/api/obra/$mangaUrl/$capSlug")
         name = capitulo.num.toString().removeSuffix(".0")
         date_upload = runCatching {
             dateFormat.parse(capitulo.data)!!.time

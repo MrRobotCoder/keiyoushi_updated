@@ -3,11 +3,6 @@ package eu.kanade.tachiyomi.extension.pt.randomscan
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.preference.PreferenceScreen
-import eu.kanade.tachiyomi.extension.pt.randomscan.dto.Capitulo
-import eu.kanade.tachiyomi.extension.pt.randomscan.dto.CapituloPagina
-import eu.kanade.tachiyomi.extension.pt.randomscan.dto.MainPage
-import eu.kanade.tachiyomi.extension.pt.randomscan.dto.Manga
-import eu.kanade.tachiyomi.extension.pt.randomscan.dto.SearchResponse
 import eu.kanade.tachiyomi.lib.randomua.addRandomUAPreferenceToScreen
 import eu.kanade.tachiyomi.lib.randomua.getPrefCustomUA
 import eu.kanade.tachiyomi.lib.randomua.getPrefUAType
@@ -57,7 +52,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override val client = network.cloudflareClient
         .newBuilder()
         .addInterceptor(::loggedVerifyInterceptor)
-        .addInterceptor(LuraZipInterceptor()::zipImageInterceptor)
+        // .addInterceptor(LuraZipInterceptor()::zipImageInterceptor)
         .rateLimit(3)
         .setRandomUserAgent(
             preferences.getPrefUAType(),
@@ -70,7 +65,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override fun popularMangaRequest(page: Int) = GET("$baseUrl/api/main/?part=${page - 1}", headers)
 
     override fun popularMangaParse(response: Response): MangasPage {
-        val document = response.parseAs<MainPage>()
+        val document = response.parseAs<MainPageDTO>()
 
         val mangas = document.top_10.map {
             SManga.create().apply {
@@ -88,7 +83,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override fun latestUpdatesRequest(page: Int) = popularMangaRequest(page)
 
     override fun latestUpdatesParse(response: Response): MangasPage {
-        val document = response.parseAs<MainPage>()
+        val document = response.parseAs<MainPageDTO>()
 
         val mangas = document.lancamentos.map {
             SManga.create().apply {
@@ -106,7 +101,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList) = GET("$baseUrl/api/autocomplete/$query", headers)
 
     override fun searchMangaParse(response: Response): MangasPage {
-        val mangas = response.parseAs<SearchResponse>().obras.map {
+        val mangas = response.parseAs<SearchResponseDTO>().obras.map {
             SManga.create().apply {
                 title = it.titulo
                 thumbnail_url = "$baseUrl${it.capa}"
@@ -126,7 +121,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     }
 
     override fun mangaDetailsParse(response: Response): SManga {
-        return response.parseAs<Manga>().let { data ->
+        return response.parseAs<MangaDTO>().let { data ->
             SManga.create().apply {
                 title = data.titulo
                 author = data.autor
@@ -168,14 +163,14 @@ class LuraToon : HttpSource(), ConfigurableSource {
             throw Exception("Capitulos não encontrados, tente migrar o manga, alguns nomes da LuraToon mudaram")
         }
 
-        val comics = response.parseAs<Manga>()
+        val comics = response.parseAs<MangaDTO>()
 
         return comics.caps.sortedByDescending {
             it.num
         }.map { chapterFromElement(manga, it) }
     }
 
-    private fun chapterFromElement(manga: SManga, capitulo: Capitulo) = SChapter.create().apply {
+    private fun chapterFromElement(manga: SManga, capitulo: CapituloDTO) = SChapter.create().apply {
         val capSlug = capitulo.slug.trimStart('/')
         val mangaUrl = manga.url.trimEnd('/').trimStart('/')
         setUrlWithoutDomain("/api/484d2a13/$mangaUrl/$capSlug")
@@ -190,7 +185,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
 
     override fun pageListParse(response: Response): List<Page> {
-        val capitulo = response.parseAs<CapituloPagina>()
+        val capitulo = response.parseAs<CapituloPaginaDTO>()
         val pathSegments = response.request.url.pathSegments
         return (0 until capitulo.files).map { i ->
             Page(i, baseUrl, "$baseUrl/api/9f8e078ec1ea/${capitulo.obra.id}/${capitulo.id}/${pathSegments[3]}")

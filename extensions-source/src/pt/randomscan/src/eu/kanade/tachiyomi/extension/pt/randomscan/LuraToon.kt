@@ -66,7 +66,10 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override fun chapterListRequest(manga: SManga): Request {
         return GET("$baseUrl/${manga.url.trimStart('/')}", headers)
     }
-    override fun mangaDetailsRequest(manga: SManga) = chapterListRequest(manga)
+    fun chapterListApiRequest(manga: SManga): Request {
+        return GET("$baseUrl/api/obra/${manga.url.trimStart('/')}", headers)
+    }
+    override fun mangaDetailsRequest(manga: SManga) = chapterListApiRequest(manga)
 
     override fun setupPreferenceScreen(screen: PreferenceScreen) {
         addRandomUAPreferenceToScreen(screen)
@@ -109,8 +112,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     }
 
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
-        val apiRequest = GET("$baseUrl/api/obra/${manga.url.trimStart('/')}", headers)
-        return client.newCall(apiRequest)
+        return client.newCall(chapterListApiRequest(manga))
             .asObservable()
             .map { response ->
                 chapterListParse(manga, response)

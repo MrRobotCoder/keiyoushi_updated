@@ -65,30 +65,6 @@ class LuraToon : HttpSource(), ConfigurableSource {
         )
         .build()
 
-    override fun setupPreferenceScreen(screen: PreferenceScreen) {
-        addRandomUAPreferenceToScreen(screen)
-    }
-
-    private inline fun <reified T> Response.parseAs(): T {
-        return json.decodeFromString<T>(body.string())
-    }
-
-    private fun loggedVerifyInterceptor(chain: Interceptor.Chain): Response {
-        val response = chain.proceed(chain.request())
-        val pathSegments = response.request.url.pathSegments
-        if (response.request.url.pathSegments.contains("login") || pathSegments.isEmpty()) {
-            throw Exception("Faça o login na WebView para acessar o contéudo")
-        }
-        if (response.code == 429) {
-            throw Exception("A LuraToon lhe bloqueou por acessar rápido demais, aguarde por volta de 1 minuto e tente novamente")
-        }
-        return response
-    }
-
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {
-        timeZone = TimeZone.getTimeZone("America/Sao_Paulo")
-    }
-
     // ============================== Popular =============================
 
     override fun popularMangaRequest(page: Int) = GET("$baseUrl/api/main/?part=${page - 1}", headers)
@@ -174,9 +150,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
 
     override fun getChapterUrl(chapter: SChapter) = "$baseUrl${chapter.url}"
 
-    override fun chapterListRequest(manga: SManga): Request {
-        return GET("$baseUrl/api/obra/${manga.url.trimStart('/')}", headers)
-    }
+    override fun chapterListRequest(manga: SManga) = mangaDetailsRequest(manga)
 
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
         val apiRequest = chapterListRequest(manga)
@@ -186,6 +160,8 @@ class LuraToon : HttpSource(), ConfigurableSource {
                 chapterListParse(manga, response)
             }
     }
+
+    override fun chapterListParse(response: Response) = throw UnsupportedOperationException()
 
     fun chapterListParse(manga: SManga, response: Response): List<SChapter> {
         if (response.code == 404) {
@@ -202,22 +178,48 @@ class LuraToon : HttpSource(), ConfigurableSource {
     private fun chapterFromElement(manga: SManga, capitulo: Capitulo) = SChapter.create().apply {
         val capSlug = capitulo.slug.trimStart('/')
         val mangaUrl = manga.url.trimEnd('/').trimStart('/')
-        setUrlWithoutDomain("/api/obra/$mangaUrl/$capSlug")
+        setUrlWithoutDomain("/api/484d2a13/$mangaUrl/$capSlug")
         name = capitulo.num.toString().removeSuffix(".0")
         date_upload = runCatching {
             dateFormat.parse(capitulo.data)!!.time
         }.getOrDefault(0L)
     }
 
+    // ============================== Pages ===============================
+
+    override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
+
     override fun pageListParse(response: Response): List<Page> {
         val capitulo = response.parseAs<CapituloPagina>()
         val pathSegments = response.request.url.pathSegments
         return (0 until capitulo.files).map { i ->
-            Page(i, baseUrl, "$baseUrl/api/cap-download/${capitulo.obra.id}/${capitulo.id}/$i?obra_id=${capitulo.obra.id}&cap_id=${capitulo.id}&slug=${pathSegments[2]}&cap_slug=${pathSegments[3]}")
+            Page(i, baseUrl, "$baseUrl/api/9f8e078ec1ea/${capitulo.obra.id}/${capitulo.id}/${pathSegments[3]}")
         }
     }
 
-    override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
+    // ============================== Utils ===============================
 
-    override fun chapterListParse(response: Response) = throw UnsupportedOperationException()
+    override fun setupPreferenceScreen(screen: PreferenceScreen) {
+        addRandomUAPreferenceToScreen(screen)
+    }
+
+    private inline fun <reified T> Response.parseAs(): T {
+        return json.decodeFromString<T>(body.string())
+    }
+
+    private fun loggedVerifyInterceptor(chain: Interceptor.Chain): Response {
+        val response = chain.proceed(chain.request())
+        val pathSegments = response.request.url.pathSegments
+        if (response.request.url.pathSegments.contains("login") || pathSegments.isEmpty()) {
+            throw Exception("Faça o login na WebView para acessar o contéudo")
+        }
+        if (response.code == 429) {
+            throw Exception("A LuraToon lhe bloqueou por acessar rápido demais, aguarde por volta de 1 minuto e tente novamente")
+        }
+        return response
+    }
+
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {
+        timeZone = TimeZone.getTimeZone("America/Sao_Paulo")
+    }
 }

@@ -172,7 +172,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
         val capSlug = capitulo.slug.trimStart('/')
         val mangaUrl = manga.url.trimEnd('/').trimStart('/')
         setUrlWithoutDomain("/api/obra/$mangaUrl/$capSlug")
-        name = capitulo.num.toString().removeSuffix(".0")
+        name = capitulo.num.toString() //.removeSuffix(".0")
         date_upload = runCatching {
             dateFormat.parse(capitulo.data)!!.time
         }.getOrDefault(0L)

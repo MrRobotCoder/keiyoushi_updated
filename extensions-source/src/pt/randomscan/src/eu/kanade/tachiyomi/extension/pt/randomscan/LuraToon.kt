@@ -189,7 +189,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
             val pathSegments = response.request.url.pathSegments
 
             (0 until capitulo.files).map { i ->
-                Page(i, baseUrl, "$baseUrl/api/cap-download/${capitulo.obra.id}/${capitulo.id}/${pathSegments[3]}")
+                Page(i, baseUrl, "$baseUrl/api/cap-download/${capitulo.obra.id}/${capitulo.id}/$i?obra_id=${capitulo.obra.id}&cap_id=${capitulo.id}&slug=${pathSegments[2]}&cap_slug=${pathSegments[3]}")
             }
         } catch (e: Exception) {
             throw Exception("Não posso encontrar as páginas do capítulo: ${e.message}")

@@ -34,12 +34,21 @@ class LuraZipInterceptor : ZipInterceptor() {
     }
 
     override fun zipGetByteStream(request: Request, response: Response): InputStream {
-        val keyData = listOf("obra_id", "slug", "cap_id", "cap_slug", "lura").joinToString("") {
+        // Gera o keyData com os parâmetros da URL concatenados
+        val keyData = listOf("obra_id", "slug", "cap_id", "cap_slug").joinToString("") {
             request.url.queryParameterValues(it).first().toString()
         }.toByteArray(StandardCharsets.UTF_8)
+
+        // Adiciona a palavra "lura" ao final de keyData
+        val extendedKeyData = keyData + "lura".toByteArray(StandardCharsets.UTF_8)
+
+        // Obtém os dados criptografados da resposta
         val encryptedData = response.body.bytes()
 
-        val decryptedData = decryptFile(encryptedData, keyData)
+        // Decripta os dados com o novo keyData
+        val decryptedData = decryptFile(encryptedData, extendedKeyData)
+
+        // Retorna o InputStream com os dados decriptografados
         return ByteArrayInputStream(decryptedData)
     }
 }

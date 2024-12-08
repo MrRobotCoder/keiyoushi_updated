@@ -22,8 +22,6 @@ import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
 import rx.Observable
 import uy.kohesive.injekt.Injekt
 import uy.kohesive.injekt.api.get
@@ -54,6 +52,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override val client = network.cloudflareClient
         .newBuilder()
         .addInterceptor(::loggedVerifyInterceptor)
+        .addInterceptor(LuraZipInterceptor()::zipImageInterceptor)
         .rateLimit(3)
         .setRandomUserAgent(
             preferences.getPrefUAType(),
@@ -182,7 +181,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
 
     // ============================== Pages ===============================
 
-    /*override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
+    override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
 
     override fun pageListParse(response: Response): List<Page> {
         return try {
@@ -194,37 +193,6 @@ class LuraToon : HttpSource(), ConfigurableSource {
             }
         } catch (e: Exception) {
             throw Exception("Não posso encontrar as páginas do capítulo: ${e.message}")
-        }
-    }*/
-
-    override fun imageUrlParse(response: Response): String {
-        throw UnsupportedOperationException()
-    }
-
-    override fun pageListParse(response: Response): List<Page> {
-        // Converte o corpo da resposta para string para análise do HTML
-        val document = Jsoup.parse(response.body?.string())
-
-        // Seleciona todas as tags <image> dentro do caminho especificado
-        val imageElements = document.select("body div#app[data-v-app] main[data-v-9f9ac27f] div.NV2II div.V4knt image")
-
-        // Gera a lista de páginas com URLs das imagens
-        if (imageElements.isEmpty()) {
-            throw IllegalStateException("Não foram encontradas imagens no caminho especificado.")
-        }
-
-        return imageElements.mapIndexed { index: Int, element: Element ->
-            val imageUrl = element.attr("xlink:href").ifEmpty {
-                element.attr("href").ifEmpty {
-                    element.attr("src")
-                }
-            }
-
-            if (imageUrl.isEmpty()) {
-                throw IllegalStateException("URL da imagem não encontrado em uma das tags <image>")
-            }
-
-            Page(index, imageUrl)
         }
     }
 

@@ -105,7 +105,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
             SManga.create().apply {
                 title = it.titulo
                 thumbnail_url = "$baseUrl${it.capa}"
-                setUrlWithoutDomain("/${it.slug}/")
+                url = "/${it.slug}/"
             }
         }
 
@@ -172,7 +172,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     private fun chapterFromElement(manga: SManga, capitulo: CapituloDTO) = SChapter.create().apply {
         val capSlug = capitulo.slug.trimStart('/')
         val mangaUrl = manga.url.trimEnd('/').trimStart('/')
-        setUrlWithoutDomain("/api/484d2a13/$mangaUrl/$capSlug") // api/484d2a13/slug_obra/slug
+        url = "$mangaUrl/$capSlug"
         name = capitulo.num.toString().removeSuffix(".0")
         date_upload = runCatching {
             dateFormat.parse(capitulo.data)!!.time
@@ -183,19 +183,13 @@ class LuraToon : HttpSource(), ConfigurableSource {
 
     override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
 
-    override fun pageListParse(response: Response): List<Page> {
-        return try {
-            val capitulo = response.parseAs<CapituloPaginaDTO>()
+    // setUrlWithoutDomain("/api/484d2a13/$mangaUrl/$capSlug") // api/484d2a13/slug_obra/slug
 
-            (0 until capitulo.files).map { i ->
-                Page(
-                    i,
-                    baseUrl,
-                    "$baseUrl/api/9f8e078ec1ea/${capitulo.obra.id}/${capitulo.id}/$i",
-                )
-            }
-        } catch (e: Exception) {
-            throw Exception("Não posso encontrar as páginas do capítulo: ${e.message}")
+    override fun pageListParse(response: Response): List<Page> {
+        val capitulo = response.parseAs<CapituloPaginaDTO>()
+        val pathSegments = response.request.url.pathSegments
+        return (0 until capitulo.files).map { i ->
+            Page(i, baseUrl, "$baseUrl/api/cap-download/${capitulo.obra.id}/${capitulo.id}/$i?obra_id=${capitulo.obra.id}&cap_id=${capitulo.id}&slug=${pathSegments[2]}&cap_slug=${pathSegments[3]}")
         }
     }
 

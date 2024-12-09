@@ -21,7 +21,7 @@ class LuraZipInterceptor : ZipInterceptor() {
         val counter = encryptedData.copyOfRange(0, 8)
         val iv = IvParameterSpec(counter)
 
-        val cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING")
+        val cipher = Cipher.getInstance("AES/CTR/NoPadding")
         cipher.init(Cipher.DECRYPT_MODE, key, iv)
 
         val decryptedData = cipher.doFinal(encryptedData.copyOfRange(8, encryptedData.size))
@@ -34,13 +34,12 @@ class LuraZipInterceptor : ZipInterceptor() {
     }
 
     override fun zipGetByteStream(request: Request, response: Response): InputStream {
-        // Faz o join dos parâmetros e adiciona 'lura' no final
-        val keyData = listOf("cap_id", "obra_id", "slug", "cap_slug").joinToString("") {
+        val keyData = listOf("obra_id", "slug", "cap_id", "cap_slug").joinToString("") {
             request.url.queryParameterValues(it).first().toString()
-        } + "lura"
-
+        }.toByteArray(StandardCharsets.UTF_8)
         val encryptedData = response.body.bytes()
-        val decryptedData = decryptFile(encryptedData, keyData.toByteArray(StandardCharsets.UTF_8))
+
+        val decryptedData = decryptFile(encryptedData, keyData)
         return ByteArrayInputStream(decryptedData)
     }
 }

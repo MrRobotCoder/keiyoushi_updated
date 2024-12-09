@@ -21,7 +21,7 @@ class LuraZipInterceptor : ZipInterceptor() {
         val counter = encryptedData.copyOfRange(0, 8)
         val iv = IvParameterSpec(counter)
 
-        val cipher = Cipher.getInstance("AES/CTR/NoPadding")
+        val cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING")
         cipher.init(Cipher.DECRYPT_MODE, key, iv)
 
         val decryptedData = cipher.doFinal(encryptedData.copyOfRange(8, encryptedData.size))
@@ -30,7 +30,7 @@ class LuraZipInterceptor : ZipInterceptor() {
     }
 
     override fun requestIsZipImage(request: Request): Boolean {
-        return request.url.pathSegments.contains("9f8e078ec1ea")
+        return request.url.pathSegments.contains("cap-download")
     }
 
     override fun zipGetByteStream(request: Request, response: Response): InputStream {

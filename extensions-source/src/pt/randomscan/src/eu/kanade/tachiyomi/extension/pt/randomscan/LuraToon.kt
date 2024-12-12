@@ -31,6 +31,18 @@ import java.util.Locale
 import java.util.TimeZone
 import kotlin.getValue
 
+import eu.kanade.tachiyomi.lib.zipinterceptor.ZipInterceptor
+import okhttp3.Request
+import okhttp3.Response
+import java.io.ByteArrayInputStream
+import java.io.InputStream
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
+import javax.crypto.Cipher
+import javax.crypto.SecretKey
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
+
 class LuraToon : HttpSource(), ConfigurableSource {
 
     override val baseUrl = "https://luratoons.net"
@@ -172,7 +184,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     private fun chapterFromElement(manga: SManga, capitulo: CapituloDTO) = SChapter.create().apply {
         val capSlug = capitulo.slug.trimStart('/')
         val mangaUrl = manga.url.trimEnd('/').trimStart('/')
-        url = "$mangaUrl/$capSlug"
+        setUrlWithoutDomain("/api/484d2a13/$mangaUrl/$capSlug")
         name = capitulo.num.toString().removeSuffix(".0")
         date_upload = runCatching {
             dateFormat.parse(capitulo.data)!!.time
@@ -183,13 +195,10 @@ class LuraToon : HttpSource(), ConfigurableSource {
 
     override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
 
-    // setUrlWithoutDomain("/api/484d2a13/$mangaUrl/$capSlug") // api/484d2a13/slug_obra/slug
-
     override fun pageListParse(response: Response): List<Page> {
         val capitulo = response.parseAs<CapituloPaginaDTO>()
-        val pathSegments = response.request.url.pathSegments
         return (0 until capitulo.files).map { i ->
-            Page(i, baseUrl, "$baseUrl/api/cap-download/${capitulo.obra.id}/${capitulo.id}/$i?obra_id=${capitulo.obra.id}&cap_id=${capitulo.id}&slug=${pathSegments[2]}&cap_slug=${pathSegments[3]}")
+            Page(i, baseUrl, "$baseUrl/api/9f8e078ec1ea/${capitulo.obra.id}/${capitulo.id}/$i")
         }
     }
 
@@ -213,6 +222,22 @@ class LuraToon : HttpSource(), ConfigurableSource {
             throw Exception("A LuraToon lhe bloqueou por acessar rápido demais, aguarde por volta de 1 minuto e tente novamente")
         }
         return response
+    }
+
+    fun decryptFile(encryptedData: ByteArray, keyBytes: ByteArray): ByteArray {
+        val keyHash = MessageDigest.getInstance("SHA-256").digest(keyBytes)
+
+        val key: SecretKey = SecretKeySpec(keyHash, "AES")
+
+        val counter = encryptedData.copyOfRange(0, 8)
+        val iv = IvParameterSpec(counter)
+
+        val cipher = Cipher.getInstance("AES/CTR/NoPadding")
+        cipher.init(Cipher.DECRYPT_MODE, key, iv)
+
+        val decryptedData = cipher.doFinal(encryptedData.copyOfRange(8, encryptedData.size))
+
+        return decryptedData
     }
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {

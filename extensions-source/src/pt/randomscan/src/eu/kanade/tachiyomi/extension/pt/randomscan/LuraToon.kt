@@ -159,23 +159,21 @@ class LuraToon : HttpSource(), ConfigurableSource {
 
     fun chapterListParse(manga: SManga, response: Response): List<SChapter> {
         if (response.code == 404) {
-            throw Exception("Capitulos não encontrados, tente migrar o manga, alguns nomes da LuraToon mudaram")
+            throw Exception("Capítulos não encontrados, tente migrar o mangá. Alguns nomes da LuraToon mudaram.")
         }
 
         val comics = response.parseAs<MangaDTO>()
-        val capitulo = response.parseAs<CapituloDTO>()
-        val capSlug = capitulo.slug.trimStart('/')
-        val mangaSlug = manga.url.trimEnd('/').trimStart('/')
+        val mangaSlug = manga.url.trim('/')
 
-        return comics.caps.map { chapter ->
+        return comics.caps.sortedByDescending { it.num }.map { chapter ->
             SChapter.create().apply {
-                name = capitulo.num.toString().removeSuffix(".0")
+                name = chapter.num.toString().removeSuffix(".0")
                 date_upload = runCatching {
-                    dateFormat.parse(capitulo.data)!!.time
+                    dateFormat.parse(chapter.data)!!.time
                 }.getOrDefault(0L)
-                url = "/api/obra/$mangaSlug/$capSlug"
+                url = "/api/obra/$mangaSlug/${chapter.slug.trimStart('/')}"
             }
-        }.sortedByDescending(SChapter::chapter_number)
+        }
     }
 
     // private fun chapterFromElement(manga: SManga, capitulo: CapituloDTO) = SChapter.create().apply {

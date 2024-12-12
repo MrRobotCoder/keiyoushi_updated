@@ -190,12 +190,12 @@ class LuraToon : HttpSource(), ConfigurableSource {
 
     override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
 
-    // override fun pageListRequest(chapter: SChapter): Request {
-    //     val chapterCode = chapter.url.substringAfterLast("/")
-    //     val payload = """{"chapter_code":"$chapterCode"}"""
-    //         .toRequestBody("application/json".toMediaType())
-    //     return GET(apiEndpointUrl, apiHeaders)
-    // }
+    override fun pageListRequest(chapter: SChapter): Request {
+        return GET(
+            "$baseUrl/api/484d2a13/${chapter.url.substringAfterLast('/')}",
+            headers,
+        )
+    }
 
     override fun pageListParse(response: Response): List<Page> {
         val capitulo = response.parseAs<CapituloPaginaDTO>()

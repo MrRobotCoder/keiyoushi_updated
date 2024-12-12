@@ -27884,24 +27884,7 @@
         "versionId": 1
       }
     ]
-  },
-  {
-  "name": "Tachiyomi: Site Manga",
-  "pkg": "eu.kanade.tachiyomi.extension.pt.sitemanga",
-  "apk": "tachiyomi-pt.sitemanga-v1.4.38.apk",
-  "lang": "pt-BR",
-  "code": 38,
-  "version": "1.4.38",
-  "nsfw": 1,
-  "sources": [
-    {
-      "name": "Sitemanga",
-      "lang": "pt-BR",
-      "id": "8209406708962970454",
-      "baseUrl": "https://sitemanga.com"
-    }
-  ]
-}, 
+  }, 
   {
     "name": "Tachiyomi: SS Reading",
     "pkg": "eu.kanade.tachiyomi.extension.pt.ssreading",

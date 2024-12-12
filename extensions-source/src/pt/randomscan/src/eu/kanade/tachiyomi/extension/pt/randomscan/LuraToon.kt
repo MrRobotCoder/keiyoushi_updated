@@ -31,18 +31,6 @@ import java.util.Locale
 import java.util.TimeZone
 import kotlin.getValue
 
-import eu.kanade.tachiyomi.lib.zipinterceptor.ZipInterceptor
-import okhttp3.Request
-import okhttp3.Response
-import java.io.ByteArrayInputStream
-import java.io.InputStream
-import java.nio.charset.StandardCharsets
-import java.security.MessageDigest
-import javax.crypto.Cipher
-import javax.crypto.SecretKey
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
-
 class LuraToon : HttpSource(), ConfigurableSource {
 
     override val baseUrl = "https://luratoons.net"
@@ -175,25 +163,41 @@ class LuraToon : HttpSource(), ConfigurableSource {
         }
 
         val comics = response.parseAs<MangaDTO>()
-
-        return comics.caps.sortedByDescending {
-            it.num
-        }.map { chapterFromElement(manga, it) }
-    }
-
-    private fun chapterFromElement(manga: SManga, capitulo: CapituloDTO) = SChapter.create().apply {
+        val capitulo = response.parseAs<CapituloDTO>()
         val capSlug = capitulo.slug.trimStart('/')
-        val mangaUrl = manga.url.trimEnd('/').trimStart('/')
-        setUrlWithoutDomain("/api/484d2a13/$mangaUrl/$capSlug")
-        name = capitulo.num.toString().removeSuffix(".0")
-        date_upload = runCatching {
-            dateFormat.parse(capitulo.data)!!.time
-        }.getOrDefault(0L)
+        val mangaSlug = manga.url.trimEnd('/').trimStart('/')
+
+        return comics.caps.map { chapter ->
+            SChapter.create().apply {
+                name = capitulo.num.toString().removeSuffix(".0")
+                date_upload = runCatching {
+                    dateFormat.parse(capitulo.data)!!.time
+                }.getOrDefault(0L)
+                url = "/api/obra/$mangaSlug/$capSlug"
+            }
+        }.sortedByDescending(SChapter::chapter_number)
     }
+
+    // private fun chapterFromElement(manga: SManga, capitulo: CapituloDTO) = SChapter.create().apply {
+    //     val capSlug = capitulo.slug.trimStart('/')
+    //     val mangaSlug = manga.url.trimEnd('/').trimStart('/')
+    //     setUrlWithoutDomain("/api/484d2a13/$mangaSlug/$capSlug")
+    //     name = capitulo.num.toString().removeSuffix(".0")
+    //     date_upload = runCatching {
+    //         dateFormat.parse(capitulo.data)!!.time
+    //     }.getOrDefault(0L)
+    // }
 
     // ============================== Pages ===============================
 
     override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
+
+    // override fun pageListRequest(chapter: SChapter): Request {
+    //     val chapterCode = chapter.url.substringAfterLast("/")
+    //     val payload = """{"chapter_code":"$chapterCode"}"""
+    //         .toRequestBody("application/json".toMediaType())
+    //     return GET(apiEndpointUrl, apiHeaders)
+    // }
 
     override fun pageListParse(response: Response): List<Page> {
         val capitulo = response.parseAs<CapituloPaginaDTO>()
@@ -222,22 +226,6 @@ class LuraToon : HttpSource(), ConfigurableSource {
             throw Exception("A LuraToon lhe bloqueou por acessar rápido demais, aguarde por volta de 1 minuto e tente novamente")
         }
         return response
-    }
-
-    fun decryptFile(encryptedData: ByteArray, keyBytes: ByteArray): ByteArray {
-        val keyHash = MessageDigest.getInstance("SHA-256").digest(keyBytes)
-
-        val key: SecretKey = SecretKeySpec(keyHash, "AES")
-
-        val counter = encryptedData.copyOfRange(0, 8)
-        val iv = IvParameterSpec(counter)
-
-        val cipher = Cipher.getInstance("AES/CTR/NoPadding")
-        cipher.init(Cipher.DECRYPT_MODE, key, iv)
-
-        val decryptedData = cipher.doFinal(encryptedData.copyOfRange(8, encryptedData.size))
-
-        return decryptedData
     }
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {

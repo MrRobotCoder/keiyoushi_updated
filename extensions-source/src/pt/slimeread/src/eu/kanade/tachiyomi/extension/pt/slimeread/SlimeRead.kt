@@ -1,6 +1,5 @@
 package eu.kanade.tachiyomi.extension.pt.slimeread
 
-import app.cash.quickjs.QuickJs
 import eu.kanade.tachiyomi.extension.pt.slimeread.dto.ChapterDto
 import eu.kanade.tachiyomi.extension.pt.slimeread.dto.LatestResponseDto
 import eu.kanade.tachiyomi.extension.pt.slimeread.dto.MangaInfoDto
@@ -16,7 +15,6 @@ import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
-import eu.kanade.tachiyomi.util.asJsoup
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -36,7 +34,7 @@ class SlimeRead : HttpSource() {
 
     override val baseUrl = "https://slimeread.com"
 
-    private val apiUrl: String by lazy { getApiUrlFromPage() }
+    private val apiUrl = "https://morria.slimeread.com:8443" // String by lazy { getApiUrlFromPage() }
 
     override val lang = "pt-BR"
 
@@ -65,41 +63,41 @@ class SlimeRead : HttpSource() {
 
     private val json: Json by injectLazy()
 
-    private fun getApiUrlFromPage(): String {
-        val initClient = network.cloudflareClient
-        val response = initClient.newCall(GET(baseUrl, headers)).execute()
-        if (!response.isSuccessful) throw Exception("HTTP error ${response.code}")
-        val document = response.asJsoup()
-        val scriptUrl = document.selectFirst("script[src*=pages/_app]")?.attr("abs:src")
-            ?: throw Exception("Could not find script URL")
-        val scriptResponse = initClient.newCall(GET(scriptUrl, headers)).execute()
-        if (!scriptResponse.isSuccessful) throw Exception("HTTP error ${scriptResponse.code}")
-        val script = scriptResponse.body.string()
-        val apiUrl = FUNCTION_REGEX.find(script)?.value?.let { function ->
-            // Procura o nome da variável `baseURL`
-            BASEURL_VAL_REGEX.find(function)?.groupValues?.get(1)?.let { baseUrlVar ->
-                // Regex para encontrar a definição da variável `baseURL`
-                val regex = """let.*?$baseUrlVar\s*=.*?;""".toRegex(RegexOption.DOT_MATCHES_ALL)
-                regex.find(function)?.value?.let { varBlock ->
-                    try {
-                        // Adiciona suporte para avaliar o JavaScript com concatenação
-                        QuickJs.create().use { quickJs ->
-                            quickJs.evaluate(
-                                """
-                                let i = { SC: "slimeread.com" }; // Mock para variáveis externas
-                                $varBlock;
-                                $baseUrlVar;
-                                """.trimIndent(),
-                            ) as String
-                        }
-                    } catch (e: Exception) {
-                        null
-                    }
-                }
-            }
-        }
-        return apiUrl?.removeSuffix("/") ?: throw Exception("Could not find API URL")
-    }
+    // private fun getApiUrlFromPage(): String {
+    //     val initClient = network.cloudflareClient
+    //     val response = initClient.newCall(GET(baseUrl, headers)).execute()
+    //     if (!response.isSuccessful) throw Exception("HTTP error ${response.code}")
+    //     val document = response.asJsoup()
+    //     val scriptUrl = document.selectFirst("script[src*=pages/_app]")?.attr("abs:src")
+    //         ?: throw Exception("Could not find script URL")
+    //     val scriptResponse = initClient.newCall(GET(scriptUrl, headers)).execute()
+    //     if (!scriptResponse.isSuccessful) throw Exception("HTTP error ${scriptResponse.code}")
+    //     val script = scriptResponse.body.string()
+    //         val apiUrl = FUNCTION_REGEX.find(script)?.value?.let { function ->
+    //             // Procura o nome da variável `baseURL`
+    //             BASEURL_VAL_REGEX.find(function)?.groupValues?.get(1)?.let { baseUrlVar ->
+    //                 // Regex para encontrar a definição da variável `baseURL`
+    //                 val regex = """let.*?$baseUrlVar\s*=.*?;""".toRegex(RegexOption.DOT_MATCHES_ALL)
+    //                 regex.find(function)?.value?.let { varBlock ->
+    //                     try {
+    //                         // Adiciona suporte para avaliar o JavaScript com concatenação
+    //                         QuickJs.create().use { quickJs ->
+    //                             quickJs.evaluate(
+    //                                 """
+    //                                 let i = { SC: "slimeread.com" }; // Mock para variáveis externas
+    //                                 $varBlock;
+    //                                 $baseUrlVar;
+    //                                 """.trimIndent(),
+    //                             ) as String
+    //                         }
+    //                     } catch (e: Exception) {
+    //                         null
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         return apiUrl?.removeSuffix("/") ?: throw Exception("Could not find API URL")
+    // }
 
     // ============================== Popular ===============================
     private var currentSlice = 0

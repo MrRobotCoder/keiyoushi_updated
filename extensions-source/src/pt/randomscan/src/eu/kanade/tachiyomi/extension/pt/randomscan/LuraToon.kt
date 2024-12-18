@@ -171,20 +171,10 @@ class LuraToon : HttpSource(), ConfigurableSource {
                 date_upload = runCatching {
                     dateFormat.parse(chapter.data)!!.time
                 }.getOrDefault(0L)
-                url = "/api/obra/$mangaSlug/${chapter.slug.trimStart('/')}"
+                setUrlWithoutDomain("/api/obra/$mangaSlug/")
             }
         }
     }
-
-    // private fun chapterFromElement(manga: SManga, capitulo: CapituloDTO) = SChapter.create().apply {
-    //     val capSlug = capitulo.slug.trimStart('/')
-    //     val mangaSlug = manga.url.trimEnd('/').trimStart('/')
-    //     setUrlWithoutDomain("/api/484d2a13/$mangaSlug/$capSlug")
-    //     name = capitulo.num.toString().removeSuffix(".0")
-    //     date_upload = runCatching {
-    //         dateFormat.parse(capitulo.data)!!.time
-    //     }.getOrDefault(0L)
-    // }
 
     // ============================== Pages ===============================
 

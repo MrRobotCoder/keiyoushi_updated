@@ -76,12 +76,21 @@ class SlimeRead : HttpSource() {
         if (!scriptResponse.isSuccessful) throw Exception("HTTP error ${scriptResponse.code}")
         val script = scriptResponse.body.string()
         val apiUrl = FUNCTION_REGEX.find(script)?.value?.let { function ->
+            // Procura o nome da variável `baseURL`
             BASEURL_VAL_REGEX.find(function)?.groupValues?.get(1)?.let { baseUrlVar ->
-                val regex = """let.*?$baseUrlVar\s*=.*?(?=,\s*\w\s*=)""".toRegex(RegexOption.DOT_MATCHES_ALL)
+                // Regex para encontrar a definição da variável `baseURL`
+                val regex = """let.*?$baseUrlVar\s*=.*?;""".toRegex(RegexOption.DOT_MATCHES_ALL)
                 regex.find(function)?.value?.let { varBlock ->
                     try {
-                        QuickJs.create().use {
-                            it.evaluate("$varBlock;$baseUrlVar") as String
+                        // Adiciona suporte para avaliar o JavaScript com concatenação
+                        QuickJs.create().use { quickJs ->
+                            quickJs.evaluate(
+                                """
+                                let i = { SC: "slimeread.com" }; // Mock para variáveis externas
+                                $varBlock;
+                                $baseUrlVar;
+                                """.trimIndent(),
+                            ) as String
                         }
                     } catch (e: Exception) {
                         null

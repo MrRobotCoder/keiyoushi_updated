@@ -223,7 +223,7 @@ class ReadMangas() : HttpSource() {
         return Observable.just(chapters)
     }
 
-    private val attempts = 3
+    private val attempts = 5
 
     private fun tryFetchChapterPage(manga: SManga, page: Int): Response {
         repeat(attempts) { index ->

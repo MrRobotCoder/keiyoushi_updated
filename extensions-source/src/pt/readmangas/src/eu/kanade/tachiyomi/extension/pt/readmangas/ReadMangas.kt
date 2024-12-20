@@ -32,7 +32,7 @@ class ReadMangas() : HttpSource() {
 
     override val name = "Read Mangas"
 
-    override val baseUrl = "https://readmangas.org"
+    override val baseUrl = "https://app.loobyt.com"
 
     override val lang = "pt-BR"
 

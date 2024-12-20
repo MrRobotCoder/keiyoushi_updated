@@ -223,7 +223,7 @@ class ReadMangas() : HttpSource() {
         return Observable.just(chapters)
     }
 
-    private val attempts = 5
+    private val attempts = 3
 
     private fun tryFetchChapterPage(manga: SManga, page: Int): Response {
         repeat(attempts) { index ->
@@ -245,15 +245,29 @@ class ReadMangas() : HttpSource() {
 
     // =========================== Pages ===================================
 
+    // override fun pageListParse(response: Response): List<Page> {
+    //     val document = response.asJsoup()
+    //     val script = document.select("script").map { it.data() }
+    //         .firstOrNull { IMAGE_URL_REGEX.containsMatchIn(it) }
+    //         ?: return emptyList()
+
+    //     return IMAGE_URL_REGEX.findAll(script).mapIndexed { index, match ->
+    //         Page(index, imageUrl = match.groups["imageUrl"]!!.value)
+    //     }.toList()
+    // }
+
     override fun pageListParse(response: Response): List<Page> {
         val document = response.asJsoup()
-        val script = document.select("script").map { it.data() }
-            .firstOrNull { IMAGE_URL_REGEX.containsMatchIn(it) }
-            ?: return emptyList()
+        val scripts = document.select("script").map { it.data() }
+        val pages = mutableListOf<Page>()
+        for (script in scripts) {
+            val matches = IMAGE_URL_REGEX.findAll(script)
+            for ((index, match) in matches.withIndex()) {
+                pages.add(Page(index, imageUrl = match.groups["imageUrl"]!!.value))
+            }
+        }
 
-        return IMAGE_URL_REGEX.findAll(script).mapIndexed { index, match ->
-            Page(index, imageUrl = match.groups["imageUrl"]!!.value)
-        }.toList()
+        return pages
     }
 
     override fun imageUrlParse(response: Response) = ""

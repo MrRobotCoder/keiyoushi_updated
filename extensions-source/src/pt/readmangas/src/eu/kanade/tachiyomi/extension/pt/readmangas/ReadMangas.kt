@@ -8,7 +8,7 @@ import java.util.Locale
 
 class ReadMangas : MangaThemesia(
     "Read Mangas",
-    "https://readmangas.org",
+    "https://app.loobyt.com",
     "pt-BR",
     dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale("pt", "BR")),
 ) {

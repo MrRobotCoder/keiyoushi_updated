@@ -2,8 +2,8 @@ ext {
     extName = 'Manga Koma'
     extClass = '.MangaKoma'
     themePkg = 'liliana'
-    baseUrl = 'https://mangakoma01.com'
-    overrideVersionCode = 1
+    baseUrl = 'https://mangakoma01.net'
+    overrideVersionCode = 0
 }
 
 apply from: "$rootDir/common.gradle"

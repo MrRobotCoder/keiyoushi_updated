@@ -245,27 +245,12 @@ class ReadMangas() : HttpSource() {
 
     // =========================== Pages ===================================
 
-    // override fun pageListParse(response: Response): List<Page> {
-    //     val document = response.asJsoup()
-    //     val script = document.select("script").map { it.data() }
-    //         .firstOrNull { IMAGE_URL_REGEX.containsMatchIn(it) }
-    //         ?: return emptyList()
-
-    //     return IMAGE_URL_REGEX.findAll(script).mapIndexed { index, match ->
-    //         Page(index, imageUrl = match.groups["imageUrl"]!!.value)
-    //     }.toList()
-    // }
-
     override fun pageListParse(response: Response): List<Page> {
         val document = response.asJsoup()
-        val scripts = document.select("script").map { it.data() }
-        val pages = mutableListOf<Page>()
-        for (script in scripts) {
-            val matches = IMAGE_URL_REGEX.findAll(script)
-            for ((index, match) in matches.withIndex()) {
-                pages.add(Page(index, imageUrl = match.groups["imageUrl"]!!.value))
-            }
-        }
+        val scripts = document.select("script").joinToString("\n") { it.data() }
+        val pages = IMAGE_URL_REGEX.findAll(scripts).mapIndexed { index, match ->
+            Page(index, imageUrl = match.groups["imageUrl"]!!.value)
+        }.toList()
 
         return pages
     }

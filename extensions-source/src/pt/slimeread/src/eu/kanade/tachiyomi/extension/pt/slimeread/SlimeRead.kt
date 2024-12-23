@@ -38,6 +38,8 @@ class SlimeRead : HttpSource() {
 
     private val apiUrl: String by lazy { getApiUrlFromPage() }
 
+    protected open val urlInfix: String = "slimeread.com"
+
     override val lang = "pt-BR"
 
     override val supportsLatest = true
@@ -65,7 +67,7 @@ class SlimeRead : HttpSource() {
 
     private val json: Json by injectLazy()
 
-    private fun getApiUrlFromPage(): String {
+    protected open fun getApiUrlFromPage(): String {
         val initClient = network.cloudflareClient
         val response = initClient.newCall(GET(baseUrl, headers)).execute()
         if (!response.isSuccessful) throw Exception("HTTP error ${response.code}")
@@ -75,21 +77,20 @@ class SlimeRead : HttpSource() {
         val scriptResponse = initClient.newCall(GET(scriptUrl, headers)).execute()
         if (!scriptResponse.isSuccessful) throw Exception("HTTP error ${scriptResponse.code}")
         val script = scriptResponse.body.string()
-        val apiUrl = FUNCTION_REGEX.find(script)?.value?.let { function ->
-            BASEURL_VAL_REGEX.find(function)?.groupValues?.get(1)?.let { baseUrlVar ->
-                val regex = """let.*?$baseUrlVar\s*=.*?(?=,\s*\w\s*=)""".toRegex(RegexOption.DOT_MATCHES_ALL)
-                regex.find(function)?.value?.let { varBlock ->
-                    try {
-                        QuickJs.create().use {
-                            it.evaluate("$varBlock;$baseUrlVar") as String
-                        }
-                    } catch (e: Exception) {
-                        null
-                    }
-                }
+        val apiUrl = FUNCTION_REGEX.find(script)?.let { result ->
+            val varBlock = result.groups["script"]?.value ?: return@let null
+            val varUrlInfix = result.groups["infix"]?.value ?: return@let null
+
+            val block = """${varBlock.replace(varUrlInfix, "\"$urlInfix\"")}.toString()"""
+
+            try {
+                QuickJs.create().use { it.evaluate(block) as String }
+            } catch (e: Exception) {
+                null
             }
         }
-        return apiUrl?.removeSuffix("/") ?: throw Exception("Could not find API URL")
+
+        return apiUrl?.let { "https://$it" } ?: throw Exception("Could not find API URL")
     }
 
     // ============================== Popular ===============================
@@ -264,7 +265,6 @@ class SlimeRead : HttpSource() {
 
     companion object {
         const val PREFIX_SEARCH = "id:"
-        val FUNCTION_REGEX = """\{[^{]*slimeread\.com:8443[^}]*\}""".toRegex(RegexOption.DOT_MATCHES_ALL)
-        val BASEURL_VAL_REGEX = """baseURL\s*:\s*(\w+)""".toRegex()
+        val FUNCTION_REGEX = """(?<script>\[""\.concat\("[^,]+,"\."\)\.concat\((?<infix>[^,]+),":\d+"\)\])""".toRegex(RegexOption.DOT_MATCHES_ALL)
     }
 }

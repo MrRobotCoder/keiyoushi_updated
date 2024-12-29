@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="eu.kanade.tachiyomi.extension.core" >
+
+    <uses-sdk android:minSdkVersion="21" />
+
+    <uses-feature android:name="tachiyomi.extension" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="dollar_openBracket_appName_closeBracket" >
+        <meta-data
+            android:name="tachiyomi.extension.class"
+            android:value="dollar_openBracket_extClass_closeBracket" />
+        <meta-data
+            android:name="tachiyomi.extension.nsfw"
+            android:value="dollar_openBracket_nsfw_closeBracket" />
+    </application>
+
+</manifest>

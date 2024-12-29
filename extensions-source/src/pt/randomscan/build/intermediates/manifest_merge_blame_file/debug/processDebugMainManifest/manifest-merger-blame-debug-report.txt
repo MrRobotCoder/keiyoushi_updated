@@ -1,0 +1,38 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="eu.kanade.tachiyomi.extension.pt.randomscan"
+4    android:versionCode="57"
+5    android:versionName="1.4.57" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-feature android:name="tachiyomi.extension" />
+11-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:7:5-56
+11-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:7:19-53
+12
+13    <application
+14        android:allowBackup="false"
+14-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:10:9-36
+15        android:debuggable="true"
+16        android:extractNativeLibs="true"
+17        android:icon="@mipmap/ic_launcher"
+17-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:11:9-43
+18        android:label="Tachiyomi: Lura Toon" >
+18-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:12:9-35
+19        <meta-data
+19-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:13:9-15:43
+20            android:name="tachiyomi.extension.class"
+20-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:14:13-53
+21            android:value=".LuraToon" />
+21-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:15:13-40
+22        <meta-data
+22-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:16:9-18:39
+23            android:name="tachiyomi.extension.nsfw"
+23-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:17:13-52
+24            android:value="0" />
+24-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:18:13-36
+25    </application>
+26
+27</manifest>

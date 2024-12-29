@@ -1,0 +1,16 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib\zipinterceptor\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14532139720626492183.xml:2:13-83
+INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib\zipinterceptor\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14532139720626492183.xml:2:13-83
+	package
+		INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib\zipinterceptor\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14532139720626492183.xml
+	xmlns:android
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib\zipinterceptor\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14532139720626492183.xml:2:23-81
+uses-sdk
+INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib\zipinterceptor\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14532139720626492183.xml reason: use-sdk injection requested
+INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib\zipinterceptor\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14532139720626492183.xml
+INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib\zipinterceptor\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14532139720626492183.xml
+	android:targetSdkVersion
+		INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib\zipinterceptor\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14532139720626492183.xml
+	android:minSdkVersion
+		INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib\zipinterceptor\build\intermediates\tmp\ProcessLibraryManifest\debug\tempAndroidManifest14532139720626492183.xml

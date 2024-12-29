@@ -1,0 +1,9 @@
+eu.kanade.tachiyomi.extension.randomscan-debug-0 C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\packaged_res\debug\packageDebugResources
+eu.kanade.tachiyomi.extension.randomscan-generateDebugEmptyResourceFiles-1 C:\GIT\keiyoushi_updated\extensions-source\lib\randomua\build\intermediates\packaged_res\debug\generateDebugEmptyResourceFiles\res
+eu.kanade.tachiyomi.extension.randomscan-generateDebugEmptyResourceFiles-2 C:\GIT\keiyoushi_updated\extensions-source\lib\zipinterceptor\build\intermediates\packaged_res\debug\generateDebugEmptyResourceFiles\res
+eu.kanade.tachiyomi.extension.randomscan-pngs-3 C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\build\generated\res\pngs\debug
+eu.kanade.tachiyomi.extension.randomscan-packageDebugResources-4 C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+eu.kanade.tachiyomi.extension.randomscan-packageDebugResources-5 C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+eu.kanade.tachiyomi.extension.randomscan-debug-6 C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\build\intermediates\merged_res\debug\mergeDebugResources
+eu.kanade.tachiyomi.extension.randomscan-randomscan-7 C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\res
+eu.kanade.tachiyomi.extension.randomscan-debug-8 C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\debug\res

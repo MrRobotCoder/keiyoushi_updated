@@ -1,0 +1,40 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:2:1-13:12
+INJECTED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:2:1-13:12
+	package
+		INJECTED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:2:11-69
+uses-feature#tachiyomi.extension
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:4:5-56
+	android:name
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:4:19-53
+application
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:6:5-11:19
+	android:label
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:6:81-107
+	android:icon
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:6:18-52
+	android:allowBackup
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:6:53-80
+meta-data#tachiyomi.extension.class
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:8:9-91
+	android:value
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:8:61-88
+	android:name
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:8:20-60
+meta-data#tachiyomi.extension.nsfw
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:9:9-86
+	android:value
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:9:60-83
+	android:name
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml:9:20-59
+uses-sdk
+INJECTED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml
+INJECTED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\GIT\keiyoushi_updated\extensions-source\core\AndroidManifest.xml

@@ -158,7 +158,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
 
         for (i in 39 downTo 0) {
             val task: Future<*> = executor.submit {
-                val url = "$baseUrl/api/9f8e078ec1ea/${manga.id}/${cap.id}/$i"
+                val url = "$baseUrl/api/c7109c0d/${manga.id}/${cap.id}/$i"
                 val request = GET(url, headers)
                 val response = clientWithoutZip.newCall(request).execute()
                 if (response.code == 200) {
@@ -181,7 +181,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
         }
 
         return (0..maxCapsQuantity).map { i ->
-            Page(i, baseUrl, "$baseUrl/api/9f8e078ec1ea/${manga.id}/${cap.id}/$i?obra_id=${manga.id}&cap_id=${cap.id}&slug=${pathSegments[2]}&cap_slug=${cap.slug}&salt=lura")
+            Page(i, baseUrl, "$baseUrl/api/c7109c0d/${manga.id}/${cap.id}/$i?obra_id=${manga.id}&cap_id=${cap.id}&slug=${pathSegments[2]}&cap_slug=${cap.slug}&salt=lura")
         }
     }
 

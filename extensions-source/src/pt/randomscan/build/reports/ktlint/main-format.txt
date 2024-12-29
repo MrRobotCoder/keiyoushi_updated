@@ -1,14 +1,1 @@
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\dto\MangaDTO.kt:1:1: Format fixed > [final-newline] File must end with a newline (\n)
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\dto\MangaDTO.kt:7:21: Format fixed > [trailing-comma-on-declaration-site] Unnecessary trailing comma before ")"
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\dto\MangaDTO.kt:15:20: Format fixed > [trailing-comma-on-declaration-site] Unnecessary trailing comma before ")"
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\dto\MangaDTO.kt:29:27: Format fixed > [trailing-comma-on-declaration-site] Unnecessary trailing comma before ")"
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\dto\MangaDTO.kt:34:13: Format fixed > [trailing-comma-on-declaration-site] Unnecessary trailing comma before ")"
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\dto\MangaDTO.kt:41:15: Format fixed > [trailing-comma-on-declaration-site] Unnecessary trailing comma before ")"
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\dto\MangaDTO.kt:48:16: Format fixed > [trailing-comma-on-declaration-site] Unnecessary trailing comma before ")"
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\dto\MangaDTO.kt:54:30: Format fixed > [trailing-comma-on-declaration-site] Unnecessary trailing comma before ")"
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\dto\MangaDTO.kt:61:14: Format fixed > [trailing-comma-on-declaration-site] Unnecessary trailing comma before ")"
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\dto\MangaDTO.kt:66:33: Format fixed > [trailing-comma-on-declaration-site] Unnecessary trailing comma before ")"
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\LuraToon.kt:1:1: Format fixed > [final-newline] File must end with a newline (\n)
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\LuraToon.kt:60:42: Format fixed > [trailing-comma-on-call-site] Unnecessary trailing comma before ")"
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\LuraToon.kt:69:41: Format fixed > [trailing-comma-on-call-site] Unnecessary trailing comma before ")"
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\LuraZipInterceptor.kt:1:1: Format fixed > [final-newline] File must end with a newline (\n)
+ok

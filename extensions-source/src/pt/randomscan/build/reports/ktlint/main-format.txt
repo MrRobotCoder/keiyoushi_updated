@@ -1,2 +1,1 @@
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\LuraToon.kt:3:1: Format fixed > [import-ordering] Imports must be ordered in lexicographic order without any empty lines in-between with "java", "javax", "kotlin" and aliases in the end
-C:\GIT\keiyoushi_updated\extensions-source\src\pt\randomscan\src\eu\kanade\tachiyomi\extension\pt\randomscan\LuraToon.kt:66:46: Format fixed > [trailing-comma-on-call-site] Unnecessary trailing comma before ")"
+ok

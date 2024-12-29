@@ -64,6 +64,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
                 addInterceptor(LuraZipInterceptor()::zipImageInterceptor)
             }
             addInterceptor(::loggedVerifyInterceptor)
+            rateLimit(3)
             setRandomUserAgent(
                 preferences.getPrefUAType(),
                 preferences.getPrefCustomUA()

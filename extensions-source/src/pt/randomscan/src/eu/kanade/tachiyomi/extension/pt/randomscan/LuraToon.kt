@@ -59,13 +59,15 @@ class LuraToon : HttpSource(), ConfigurableSource {
     private fun buildClient(withZip: Boolean = true) = network.cloudflareClient
         .newBuilder()
         .apply {
-            rateLimit(25, 1, TimeUnit.MINUTES)
+            if (withZip) {
+                rateLimit(25, 1, TimeUnit.MINUTES)
+                addInterceptor(LuraZipInterceptor()::zipImageInterceptor)
+            }
             addInterceptor(::loggedVerifyInterceptor)
             setRandomUserAgent(
                 preferences.getPrefUAType(),
                 preferences.getPrefCustomUA()
             )
-            if (withZip) addInterceptor(LuraZipInterceptor()::zipImageInterceptor)
         }
         .build()
 

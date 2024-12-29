@@ -1,4 +1,4 @@
-#Sun Dec 29 17:48:28 GMT-03:00 2024
+#Sun Dec 29 17:56:07 GMT-03:00 2024
 base.0=C\:\\GIT\\keiyoushi_updated\\extensions-source\\src\\pt\\randomscan\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=C\:\\GIT\\keiyoushi_updated\\extensions-source\\src\\pt\\randomscan\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\0\\classes.dex
 base.2=C\:\\GIT\\keiyoushi_updated\\extensions-source\\src\\pt\\randomscan\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex

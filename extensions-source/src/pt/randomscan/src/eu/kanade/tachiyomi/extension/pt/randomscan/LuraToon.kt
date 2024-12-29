@@ -3,10 +3,10 @@ package eu.kanade.tachiyomi.extension.pt.randomscan
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.preference.PreferenceScreen
-import eu.kanade.tachiyomi.extension.pt.randomscan.dto.Capitulo
-import eu.kanade.tachiyomi.extension.pt.randomscan.dto.MainPage
-import eu.kanade.tachiyomi.extension.pt.randomscan.dto.Manga
-import eu.kanade.tachiyomi.extension.pt.randomscan.dto.SearchResponse
+import eu.kanade.tachiyomi.extension.pt.randomscan.dto.CapituloDto
+import eu.kanade.tachiyomi.extension.pt.randomscan.dto.MainPageDto
+import eu.kanade.tachiyomi.extension.pt.randomscan.dto.MangaDto
+import eu.kanade.tachiyomi.extension.pt.randomscan.dto.SearchResponseDto
 import eu.kanade.tachiyomi.lib.randomua.addRandomUAPreferenceToScreen
 import eu.kanade.tachiyomi.lib.randomua.getPrefCustomUA
 import eu.kanade.tachiyomi.lib.randomua.getPrefUAType
@@ -33,7 +33,6 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.Executors
-import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 import kotlin.getValue
 
@@ -50,28 +49,24 @@ class LuraToon : HttpSource(), ConfigurableSource {
         Injekt.get<Application>().getSharedPreferences("source_$id", 0x0000)
     }
 
-    override val client = network.cloudflareClient
+    private fun buildClient(withZip: Boolean = true) = network.cloudflareClient
         .newBuilder()
-        .rateLimit(25, 1, TimeUnit.MINUTES)
-        .addInterceptor(::loggedVerifyInterceptor)
-        .addInterceptor(LuraZipInterceptor()::zipImageInterceptor)
-        .setRandomUserAgent(
-            preferences.getPrefUAType(),
-            preferences.getPrefCustomUA()
-        )
+        .apply {
+            rateLimit(25, 1, TimeUnit.MINUTES)
+            addInterceptor(::loggedVerifyInterceptor)
+            setRandomUserAgent(
+                preferences.getPrefUAType(),
+                preferences.getPrefCustomUA()
+            )
+            if (withZip) addInterceptor(LuraZipInterceptor()::zipImageInterceptor)
+        }
         .build()
 
-    private val clientWithoutZip = network.cloudflareClient
-        .newBuilder()
-        .addInterceptor(::loggedVerifyInterceptor)
-        .setRandomUserAgent(
-            preferences.getPrefUAType(),
-            preferences.getPrefCustomUA()
-        )
-        .build()
+    override val client = buildClient()
+    private val clientWithoutZip = buildClient(withZip = false)
 
-    override fun latestUpdatesRequest(page: Int) = GET("$baseUrl/api/main/?part=${page - 1}", headers)
     override fun popularMangaRequest(page: Int) = GET("$baseUrl/api/main/?part=${page - 1}", headers)
+    override fun latestUpdatesRequest(page: Int) = popularMangaRequest(page)
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList) = GET("$baseUrl/api/autocomplete/$query", headers)
     override fun chapterListRequest(manga: SManga) = GET("$baseUrl/api/obra/${manga.url.trimStart('/')}", headers)
     override fun mangaDetailsRequest(manga: SManga) = chapterListRequest(manga)
@@ -81,7 +76,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     }
 
     override fun mangaDetailsParse(response: Response) = SManga.create().apply {
-        val data = response.parseAs<Manga>()
+        val data = response.parseAs<MangaDto>()
         title = data.titulo
         author = data.autor
         artist = data.artista
@@ -103,7 +98,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     }
 
     override fun latestUpdatesParse(response: Response): MangasPage {
-        val document = response.parseAs<MainPage>()
+        val document = response.parseAs<MainPageDto>()
 
         val mangas = document.lancamentos.map {
             SManga.create().apply {
@@ -129,14 +124,14 @@ class LuraToon : HttpSource(), ConfigurableSource {
             throw Exception("Capitulos não encontrados, tente migrar o manga, alguns nomes da LuraToon mudaram")
         }
 
-        val comics = response.parseAs<Manga>()
+        val comics = response.parseAs<MangaDto>()
 
         return comics.caps.sortedByDescending {
             it.num
         }.map { chapterFromElement(manga, it) }
     }
 
-    private fun chapterFromElement(manga: SManga, capitulo: Capitulo) = SChapter.create().apply {
+    private fun chapterFromElement(manga: SManga, capitulo: CapituloDto) = SChapter.create().apply {
         val capSlug = capitulo.slug.trimStart('/')
         val mangaUrl = manga.url.trimEnd('/').trimStart('/')
         setUrlWithoutDomain("/api/obra/$mangaUrl/?slug=$capSlug")
@@ -147,46 +142,53 @@ class LuraToon : HttpSource(), ConfigurableSource {
     }
 
     override fun pageListParse(response: Response): List<Page> {
-        val manga = response.parseAs<Manga>()
+        val manga = response.parseAs<MangaDto>()
         val pathSegments = response.request.url.pathSegments
         val slug = response.request.url.queryParameter("slug").toString()
-        val cap = manga.caps.find { it.slug == slug } ?: throw Exception("Capitulo não encontrado")
+        val cap = manga.caps.find { it.slug == slug } ?: throw Exception("Capítulo não encontrado")
 
-        var maxCapsQuantity = -1
+        // Executor para gerenciamento de threads
         val executor = Executors.newCachedThreadPool()
-        val tasks: MutableList<Future<*>> = mutableListOf()
+        var maxCapsQuantity = -1
 
-        for (i in 39 downTo 0) {
-            val task: Future<*> = executor.submit {
-                val url = "$baseUrl/api/c7109c0d/${manga.id}/${cap.id}/$i"
-                val request = GET(url, headers)
-                val response = clientWithoutZip.newCall(request).execute()
-                if (response.code == 200) {
-                    synchronized(this) {
-                        if (i > maxCapsQuantity) {
-                            maxCapsQuantity = i
-                        }
-                    }
-                }
-            }
-            tasks.add(task)
+        // Função auxiliar para verificar se uma página está disponível
+        fun isPageAvailable(index: Int): Boolean {
+            val url = "$baseUrl/api/c7109c0d/${manga.id}/${cap.id}/$index"
+            val request = GET(url, headers)
+            val response = clientWithoutZip.newCall(request).execute()
+            return response.code == 200
         }
 
-        tasks.forEach { it.get() }
+        // Busca binária para encontrar o maior índice válido
+        var low = 0
+        var high = 45
+
+        while (low <= high) {
+            val mid = (low + high) / 2
+            val future = executor.submit<Boolean> { isPageAvailable(mid) }
+            if (future.get()) {
+                maxCapsQuantity = mid
+                low = mid + 1 // Buscar índices maiores
+            } else {
+                high = mid - 1 // Buscar índices menores
+            }
+        }
 
         executor.shutdown()
 
-        if (maxCapsQuantity == -1) {
-            throw Exception("Nenhum capítulo retornou status 200")
-        }
+        if (maxCapsQuantity == -1) throw Exception("Nenhum capítulo retornou status 200")
 
+        // Geração das páginas com os índices válidos
         return (0..maxCapsQuantity).map { i ->
-            Page(i, baseUrl, "$baseUrl/api/c7109c0d/${manga.id}/${cap.id}/$i?obra_id=${manga.id}&cap_id=${cap.id}&slug=${pathSegments[2]}&cap_slug=${cap.slug}&salt=lura")
+            Page(
+                index = i,
+                url = "$baseUrl/api/c7109c0d/${manga.id}/${cap.id}/$i?obra_id=${manga.id}&cap_id=${cap.id}&slug=${pathSegments[2]}&cap_slug=${cap.slug}&salt=lura"
+            )
         }
     }
 
     override fun searchMangaParse(response: Response): MangasPage {
-        val mangas = response.parseAs<SearchResponse>().obras.map {
+        val mangas = response.parseAs<SearchResponseDto>().obras.map {
             SManga.create().apply {
                 title = it.titulo
                 thumbnail_url = "$baseUrl${it.capa}"
@@ -198,7 +200,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     }
 
     override fun popularMangaParse(response: Response): MangasPage {
-        val document = response.parseAs<MainPage>()
+        val document = response.parseAs<MainPageDto>()
 
         val mangas = document.top_10.map {
             SManga.create().apply {

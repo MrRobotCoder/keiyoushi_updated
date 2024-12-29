@@ -3,6 +3,7 @@ package eu.kanade.tachiyomi.extension.pt.randomscan
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.preference.PreferenceScreen
+import eu.kanade.tachiyomi.extension.pt.randomscan.dto.CapituloDto
 import eu.kanade.tachiyomi.extension.pt.randomscan.dto.MainPageDto
 import eu.kanade.tachiyomi.extension.pt.randomscan.dto.MangaDto
 import eu.kanade.tachiyomi.extension.pt.randomscan.dto.SearchResponseDto
@@ -170,21 +171,24 @@ class LuraToon : HttpSource(), ConfigurableSource {
 
     fun chapterListParse(manga: SManga, response: Response): List<SChapter> {
         if (response.code == 404) {
-            throw Exception("Capítulos não encontrados, tente migrar o mangá. Alguns nomes da LuraToon mudaram.")
+            throw Exception("Capitulos não encontrados, tente migrar o manga, alguns nomes da LuraToon mudaram")
         }
 
         val comics = response.parseAs<MangaDto>()
-        val mangaSlug = manga.url.trim('/')
 
-        return comics.caps.sortedByDescending { it.num }.map { capitulo ->
-            SChapter.create().apply {
-                name = capitulo.num.toString().removeSuffix(".0")
-                date_upload = runCatching {
-                    dateFormat.parse(capitulo.data)!!.time
-                }.getOrDefault(0L)
-                url = "/api/obra/$mangaSlug/${capitulo.slug}"
-            }
-        }
+        return comics.caps.sortedByDescending {
+            it.num
+        }.map { chapterFromElement(manga, it) }
+    }
+
+    private fun chapterFromElement(manga: SManga, capitulo: CapituloDto) = SChapter.create().apply {
+        val capSlug = capitulo.slug.trimStart('/')
+        val mangaUrl = manga.url.trimEnd('/').trimStart('/')
+        url = "/api/obra/$mangaUrl/?slug=$capSlug"
+        name = capitulo.num.toString().removeSuffix(".0")
+        date_upload = runCatching {
+            dateFormat.parse(capitulo.data)!!.time
+        }.getOrDefault(0L)
     }
 
     // ============================== Pages ===============================
@@ -194,7 +198,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override fun pageListParse(response: Response): List<Page> {
         val manga = response.parseAs<MangaDto>()
         val pathSegments = response.request.url.pathSegments
-        val slug = pathSegments[2]
+        val slug = response.request.url.queryParameter("slug").toString()
         val cap = manga.caps.find { it.slug == slug } ?: throw Exception("Capitulo não encontrado")
 
         var maxCapsQuantity = -1
@@ -226,7 +230,7 @@ class LuraToon : HttpSource(), ConfigurableSource {
         }
 
         return (0..maxCapsQuantity).map { i ->
-            Page(i, baseUrl, "$baseUrl/api/c7109c0d/${manga.id}/${cap.id}/$i?obra_id=${manga.id}&cap_id=${cap.id}&slug=$slug&cap_slug=${cap.slug}&salt=lura")
+            Page(i, baseUrl, "$baseUrl/api/c7109c0d/${manga.id}/${cap.id}/$i?obra_id=${manga.id}&cap_id=${cap.id}&slug=${pathSegments[2]}&cap_slug=${cap.slug}&salt=lura")
         }
     }
 

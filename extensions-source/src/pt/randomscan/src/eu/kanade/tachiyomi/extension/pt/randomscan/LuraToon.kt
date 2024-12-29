@@ -3,7 +3,6 @@ package eu.kanade.tachiyomi.extension.pt.randomscan
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.preference.PreferenceScreen
-import eu.kanade.tachiyomi.extension.pt.randomscan.dto.CapituloDto
 import eu.kanade.tachiyomi.extension.pt.randomscan.dto.MainPageDto
 import eu.kanade.tachiyomi.extension.pt.randomscan.dto.MangaDto
 import eu.kanade.tachiyomi.extension.pt.randomscan.dto.SearchResponseDto
@@ -24,6 +23,7 @@ import eu.kanade.tachiyomi.source.online.HttpSource
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
+import okhttp3.Request
 import okhttp3.Response
 import rx.Observable
 import uy.kohesive.injekt.Injekt
@@ -33,14 +33,20 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.Executors
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 import kotlin.getValue
 
 class LuraToon : HttpSource(), ConfigurableSource {
+
     override val baseUrl = "https://luratoons.net"
+
     override val name = "Lura Toon"
+
     override val lang = "pt-BR"
+
     override val supportsLatest = true
+
     override val versionId = 2
 
     private val json: Json by injectLazy()
@@ -65,37 +71,27 @@ class LuraToon : HttpSource(), ConfigurableSource {
     override val client = buildClient()
     private val clientWithoutZip = buildClient(withZip = false)
 
+    // ============================== Popular =============================
+
     override fun popularMangaRequest(page: Int) = GET("$baseUrl/api/main/?part=${page - 1}", headers)
-    override fun latestUpdatesRequest(page: Int) = popularMangaRequest(page)
-    override fun searchMangaRequest(page: Int, query: String, filters: FilterList) = GET("$baseUrl/api/autocomplete/$query", headers)
-    override fun chapterListRequest(manga: SManga) = GET("$baseUrl/api/obra/${manga.url.trimStart('/')}", headers)
-    override fun mangaDetailsRequest(manga: SManga) = chapterListRequest(manga)
 
-    override fun setupPreferenceScreen(screen: PreferenceScreen) {
-        addRandomUAPreferenceToScreen(screen)
-    }
+    override fun popularMangaParse(response: Response): MangasPage {
+        val document = response.parseAs<MainPageDto>()
 
-    override fun mangaDetailsParse(response: Response) = SManga.create().apply {
-        val data = response.parseAs<MangaDto>()
-        title = data.titulo
-        author = data.autor
-        artist = data.artista
-        genre = data.generos.joinToString(", ") { it.name }
-        status = when (data.status) {
-            "Em Lançamento" -> SManga.ONGOING
-            "Finalizado" -> SManga.COMPLETED
-            else -> SManga.UNKNOWN
+        val mangas = document.top_10.map {
+            SManga.create().apply {
+                title = it.title
+                thumbnail_url = "$baseUrl${it.capa}"
+                url = "/${it.slug}/"
+            }
         }
-        thumbnail_url = "$baseUrl${data.capa}"
 
-        val category = data.tipo
-        val synopsis = data.sinopse
-        description = "Tipo: $category\n\n$synopsis"
+        return MangasPage(mangas, false)
     }
 
-    private inline fun <reified T> Response.parseAs(): T {
-        return json.decodeFromString<T>(body.string())
-    }
+    // ============================== Latest =============================
+
+    override fun latestUpdatesRequest(page: Int) = popularMangaRequest(page)
 
     override fun latestUpdatesParse(response: Response): MangasPage {
         val document = response.parseAs<MainPageDto>()
@@ -104,12 +100,63 @@ class LuraToon : HttpSource(), ConfigurableSource {
             SManga.create().apply {
                 title = it.title
                 thumbnail_url = "$baseUrl${it.capa}"
-                setUrlWithoutDomain("/${it.slug}/")
+                url = "/${it.slug}/"
             }
         }
 
         return MangasPage(mangas, document.lancamentos.isNotEmpty())
     }
+
+    // ============================== Search ==============================
+
+    override fun searchMangaRequest(page: Int, query: String, filters: FilterList) = GET("$baseUrl/api/autocomplete/$query", headers)
+
+    override fun searchMangaParse(response: Response): MangasPage {
+        val mangas = response.parseAs<SearchResponseDto>().obras.map {
+            SManga.create().apply {
+                title = it.titulo
+                thumbnail_url = "$baseUrl${it.capa}"
+                url = "/${it.slug}/"
+            }
+        }
+
+        return MangasPage(mangas, false)
+    }
+
+    // ============================== Details =============================
+
+    override fun getMangaUrl(manga: SManga) = "$baseUrl${manga.url}"
+
+    override fun mangaDetailsRequest(manga: SManga): Request {
+        return GET("$baseUrl/api/obra/${manga.url.trimStart('/')}", headers)
+    }
+
+    override fun mangaDetailsParse(response: Response): SManga {
+        return response.parseAs<MangaDto>().let { data ->
+            SManga.create().apply {
+                title = data.titulo
+                author = data.autor
+                artist = data.artista
+                genre = data.generos.joinToString(", ") { it.name }
+                status = when (data.status) {
+                    "Em Lançamento" -> SManga.ONGOING
+                    "Finalizado" -> SManga.COMPLETED
+                    else -> SManga.UNKNOWN
+                }
+                thumbnail_url = "$baseUrl${data.capa}"
+
+                val category = data.tipo
+                val synopsis = data.sinopse
+                description = "Tipo: $category\n\n$synopsis"
+            }
+        }
+    }
+
+    // ============================== Chapters =============================
+
+    override fun getChapterUrl(chapter: SChapter) = "$baseUrl${chapter.url}"
+
+    override fun chapterListRequest(manga: SManga) = mangaDetailsRequest(manga)
 
     override fun fetchChapterList(manga: SManga): Observable<List<SChapter>> {
         return client.newCall(chapterListRequest(manga))
@@ -119,98 +166,78 @@ class LuraToon : HttpSource(), ConfigurableSource {
             }
     }
 
+    override fun chapterListParse(response: Response) = throw UnsupportedOperationException()
+
     fun chapterListParse(manga: SManga, response: Response): List<SChapter> {
         if (response.code == 404) {
-            throw Exception("Capitulos não encontrados, tente migrar o manga, alguns nomes da LuraToon mudaram")
+            throw Exception("Capítulos não encontrados, tente migrar o mangá. Alguns nomes da LuraToon mudaram.")
         }
 
         val comics = response.parseAs<MangaDto>()
+        val mangaSlug = manga.url.trim('/')
 
-        return comics.caps.sortedByDescending {
-            it.num
-        }.map { chapterFromElement(manga, it) }
+        return comics.caps.sortedByDescending { it.num }.map { capitulo ->
+            SChapter.create().apply {
+                name = capitulo.num.toString().removeSuffix(".0")
+                date_upload = runCatching {
+                    dateFormat.parse(capitulo.data)!!.time
+                }.getOrDefault(0L)
+                url = "/api/obra/$mangaSlug/${capitulo.slug}"
+            }
+        }
     }
 
-    private fun chapterFromElement(manga: SManga, capitulo: CapituloDto) = SChapter.create().apply {
-        val capSlug = capitulo.slug.trimStart('/')
-        val mangaUrl = manga.url.trimEnd('/').trimStart('/')
-        setUrlWithoutDomain("/api/obra/$mangaUrl/?slug=$capSlug")
-        name = capitulo.num.toString().removeSuffix(".0")
-        date_upload = runCatching {
-            dateFormat.parse(capitulo.data)!!.time
-        }.getOrDefault(0L)
-    }
+    // ============================== Pages ===============================
+
+    override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
 
     override fun pageListParse(response: Response): List<Page> {
         val manga = response.parseAs<MangaDto>()
         val pathSegments = response.request.url.pathSegments
-        val slug = response.request.url.queryParameter("slug").toString()
-        val cap = manga.caps.find { it.slug == slug } ?: throw Exception("Capítulo não encontrado")
+        val slug = pathSegments[2]
+        val cap = manga.caps.find { it.slug == slug } ?: throw Exception("Capitulo não encontrado")
 
-        // Executor para gerenciamento de threads
-        val executor = Executors.newCachedThreadPool()
         var maxCapsQuantity = -1
+        val executor = Executors.newCachedThreadPool()
+        val tasks: MutableList<Future<*>> = mutableListOf()
 
-        // Função auxiliar para verificar se uma página está disponível
-        fun isPageAvailable(index: Int): Boolean {
-            val url = "$baseUrl/api/c7109c0d/${manga.id}/${cap.id}/$index"
-            val request = GET(url, headers)
-            val response = clientWithoutZip.newCall(request).execute()
-            return response.code == 200
-        }
-
-        // Busca binária para encontrar o maior índice válido
-        var low = 0
-        var high = 45
-
-        while (low <= high) {
-            val mid = (low + high) / 2
-            val future = executor.submit<Boolean> { isPageAvailable(mid) }
-            if (future.get()) {
-                maxCapsQuantity = mid
-                low = mid + 1 // Buscar índices maiores
-            } else {
-                high = mid - 1 // Buscar índices menores
+        for (i in 39 downTo 0) {
+            val task: Future<*> = executor.submit {
+                val url = "$baseUrl/api/c7109c0d/${manga.id}/${cap.id}/$i"
+                val request = GET(url, headers)
+                val response = clientWithoutZip.newCall(request).execute()
+                if (response.code == 200) {
+                    synchronized(this) {
+                        if (i > maxCapsQuantity) {
+                            maxCapsQuantity = i
+                        }
+                    }
+                }
             }
+            tasks.add(task)
         }
+
+        tasks.forEach { it.get() }
 
         executor.shutdown()
 
-        if (maxCapsQuantity == -1) throw Exception("Nenhum capítulo retornou status 200")
+        if (maxCapsQuantity == -1) {
+            throw Exception("Nenhum capítulo retornou status 200")
+        }
 
-        // Geração das páginas com os índices válidos
         return (0..maxCapsQuantity).map { i ->
-            Page(
-                index = i,
-                url = "$baseUrl/api/c7109c0d/${manga.id}/${cap.id}/$i?obra_id=${manga.id}&cap_id=${cap.id}&slug=${pathSegments[2]}&cap_slug=${cap.slug}&salt=lura"
-            )
+            Page(i, baseUrl, "$baseUrl/api/c7109c0d/${manga.id}/${cap.id}/$i?obra_id=${manga.id}&cap_id=${cap.id}&slug=$slug&cap_slug=${cap.slug}&salt=lura")
         }
     }
 
-    override fun searchMangaParse(response: Response): MangasPage {
-        val mangas = response.parseAs<SearchResponseDto>().obras.map {
-            SManga.create().apply {
-                title = it.titulo
-                thumbnail_url = "$baseUrl${it.capa}"
-                setUrlWithoutDomain("/${it.slug}/")
-            }
-        }
+    // ============================== Utils ===============================
 
-        return MangasPage(mangas, false)
+    override fun setupPreferenceScreen(screen: PreferenceScreen) {
+        addRandomUAPreferenceToScreen(screen)
     }
 
-    override fun popularMangaParse(response: Response): MangasPage {
-        val document = response.parseAs<MainPageDto>()
-
-        val mangas = document.top_10.map {
-            SManga.create().apply {
-                title = it.title
-                thumbnail_url = "$baseUrl${it.capa}"
-                setUrlWithoutDomain("/${it.slug}/")
-            }
-        }
-
-        return MangasPage(mangas, false)
+    private inline fun <reified T> Response.parseAs(): T {
+        return json.decodeFromString<T>(body.string())
     }
 
     private fun loggedVerifyInterceptor(chain: Interceptor.Chain): Response {
@@ -228,8 +255,4 @@ class LuraToon : HttpSource(), ConfigurableSource {
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {
         timeZone = TimeZone.getTimeZone("America/Sao_Paulo")
     }
-
-    override fun imageUrlParse(response: Response) = throw UnsupportedOperationException()
-
-    override fun chapterListParse(response: Response) = throw UnsupportedOperationException()
 }

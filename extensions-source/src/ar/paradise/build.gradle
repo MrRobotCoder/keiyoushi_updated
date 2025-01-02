@@ -1,0 +1,10 @@
+ext {
+    extName = 'Paradise'
+    extClass = '.Paradise'
+    themePkg = 'madara'
+    baseUrl = 'https://paradise-bl.com'
+    overrideVersionCode = 0
+    isNsfw = true
+}
+
+apply from: "$rootDir/common.gradle"

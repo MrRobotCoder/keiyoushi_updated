@@ -1,0 +1,44 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="eu.kanade.tachiyomi.multisrc.madara" >
+4
+5    <uses-sdk android:minSdkVersion="21" />
+6
+7    <application>
+7-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:4:5-21:19
+8        <activity
+8-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:5:9-20:20
+9            android:name="eu.kanade.tachiyomi.multisrc.madara.MadaraUrlActivity"
+9-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:6:13-81
+10            android:excludeFromRecents="true"
+10-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:7:13-46
+11            android:exported="true"
+11-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:8:13-36
+12            android:theme="@android:style/Theme.NoDisplay" >
+12-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:9:13-59
+13            <intent-filter>
+13-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:10:13-19:29
+14                <action android:name="android.intent.action.VIEW" />
+14-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:11:17-69
+14-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:11:25-66
+15
+16                <category android:name="android.intent.category.DEFAULT" />
+16-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:13:17-76
+16-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:13:27-73
+17                <category android:name="android.intent.category.BROWSABLE" />
+17-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:14:17-78
+17-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:14:27-75
+18
+19                <data
+19-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:15:17-18:56
+20                    android:host="${SOURCEHOST}"
+20-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:16:21-49
+21                    android:pathPattern="/.*/..*"
+21-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:17:21-50
+22                    android:scheme="${SOURCESCHEME}" />
+22-->C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:18:21-53
+23            </intent-filter>
+24        </activity>
+25    </application>
+26
+27</manifest>

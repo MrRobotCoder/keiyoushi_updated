@@ -7636,6 +7636,26 @@
     ]
   },
   {
+    "name": "Tachiyomi: Paradise",
+    "pkg": "eu.kanade.tachiyomi.extension.ar.paradise",
+    "apk": "tachiyomi-ar.paradise-v1.4.37.apk",
+    "lang": "ar",
+    "code": 37,
+    "version": "1.4.37",
+    "nsfw": 1,
+    "hasReadme": 0,
+    "hasChangelog": 0,
+    "sources": [
+      {
+        "name": "Paradise",
+        "lang": "ar",
+        "id": "6818709036814540480",
+        "baseUrl": "https://paradise-bl.com",
+        "versionId": 1
+      }
+    ]
+  },
+  {
     "name": "Tachiyomi: Arabs Doujin",
     "pkg": "eu.kanade.tachiyomi.extension.ar.arabsdoujin",
     "apk": "tachiyomi-ar.arabsdoujin-v1.4.10.apk",

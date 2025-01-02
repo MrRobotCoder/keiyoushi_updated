@@ -1,0 +1,72 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="eu.kanade.tachiyomi.extension.ar.paradise"
+4    android:versionCode="37"
+5    android:versionName="1.4.37" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-feature android:name="tachiyomi.extension" />
+11-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:7:5-56
+11-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:7:19-53
+12
+13    <application
+14        android:allowBackup="false"
+14-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:10:9-36
+15        android:debuggable="true"
+16        android:extractNativeLibs="true"
+17        android:icon="@mipmap/ic_launcher"
+17-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:11:9-43
+18        android:label="Tachiyomi: Paradise" >
+18-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:12:9-35
+19        <activity
+19-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:8:9-24:20
+20            android:name="eu.kanade.tachiyomi.multisrc.madara.MadaraUrlActivity"
+20-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:9:13-81
+21            android:excludeFromRecents="true"
+21-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:10:13-46
+22            android:exported="true"
+22-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:11:13-36
+23            android:theme="@android:style/Theme.NoDisplay" >
+23-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:12:13-59
+24            <intent-filter>
+24-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:13:13-23:29
+25                <action android:name="android.intent.action.VIEW" />
+25-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:14:17-69
+25-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:14:25-66
+26
+27                <category android:name="android.intent.category.DEFAULT" />
+27-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:16:17-76
+27-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:16:27-73
+28                <category android:name="android.intent.category.BROWSABLE" />
+28-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:17:17-78
+28-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:17:27-75
+29
+30                <data
+30-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:19:17-22:56
+31                    android:host="paradise-bl.com"
+31-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:20:21-49
+32                    android:pathPattern="/.*/..*"
+32-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:21:21-50
+33                    android:scheme="https" />
+33-->[:lib-multisrc:madara] C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:22:21-53
+34            </intent-filter>
+35        </activity>
+36
+37        <meta-data
+37-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:13:9-15:43
+38            android:name="tachiyomi.extension.class"
+38-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:14:13-53
+39            android:value=".Paradise" />
+39-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:15:13-40
+40        <meta-data
+40-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:16:9-18:39
+41            android:name="tachiyomi.extension.nsfw"
+41-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:17:13-52
+42            android:value="1" />
+42-->[:core] C:\GIT\keiyoushi_updated\extensions-source\core\build\intermediates\merged_manifest\debug\processDebugManifest\AndroidManifest.xml:18:13-36
+43    </application>
+44
+45</manifest>

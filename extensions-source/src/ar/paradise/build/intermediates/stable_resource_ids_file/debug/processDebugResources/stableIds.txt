@@ -1,0 +1,1 @@
+eu.kanade.tachiyomi.extension.ar.paradise:mipmap/ic_launcher = 0x7f010000

@@ -1,0 +1,2 @@
+eu.kanade.tachiyomi.multisrc.madara
+mipmap ic_launcher

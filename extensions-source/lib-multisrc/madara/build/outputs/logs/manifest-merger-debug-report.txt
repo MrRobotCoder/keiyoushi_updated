@@ -1,0 +1,50 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:2:1-22:12
+INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:2:1-22:12
+	package
+		INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:2:11-69
+application
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:4:5-21:19
+activity#eu.kanade.tachiyomi.multisrc.madara.MadaraUrlActivity
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:5:9-20:20
+	android:excludeFromRecents
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:7:13-46
+	android:exported
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:8:13-36
+	android:theme
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:9:13-59
+	android:name
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:6:13-81
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:host:${SOURCEHOST}+data:pathPattern:/.*/..*+data:scheme:${SOURCESCHEME}
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:10:13-19:29
+action#android.intent.action.VIEW
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:11:17-69
+	android:name
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:11:25-66
+category#android.intent.category.DEFAULT
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:13:17-76
+	android:name
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:13:27-73
+category#android.intent.category.BROWSABLE
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:14:17-78
+	android:name
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:14:27-75
+data
+ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:15:17-18:56
+	android:host
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:16:21-49
+	android:scheme
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:18:21-53
+	android:pathPattern
+		ADDED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml:17:21-50
+uses-sdk
+INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml
+INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\GIT\keiyoushi_updated\extensions-source\lib-multisrc\madara\AndroidManifest.xml

@@ -1,4 +1,4 @@
-#Thu Jan 02 09:53:20 GMT-03:00 2025
+#Thu Jan 02 11:13:33 GMT-03:00 2025
 base.0=C\:\\GIT\\keiyoushi_updated\\extensions-source\\src\\ar\\paradise\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\0\\classes.dex
 base.1=C\:\\GIT\\keiyoushi_updated\\extensions-source\\src\\ar\\paradise\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
 base.2=C\:\\GIT\\keiyoushi_updated\\extensions-source\\src\\ar\\paradise\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\1\\classes.dex

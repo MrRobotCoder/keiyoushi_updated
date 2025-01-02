@@ -8,12 +8,32 @@
         "source": "eu.kanade.tachiyomi.extension.paradise-paradise-8:/mipmap-xhdpi/ic_launcher.png"
     },
     {
+        "merged": "C:\\Users\\Lando\\.gradle\\daemon\\8.12\\eu.kanade.tachiyomi.extension.paradise-debug-7:\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Lando\\.gradle\\daemon\\8.12\\eu.kanade.tachiyomi.extension.paradise-paradise-8:\\mipmap-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\Lando\\.gradle\\daemon\\8.12\\eu.kanade.tachiyomi.extension.paradise-debug-7:\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Lando\\.gradle\\daemon\\8.12\\eu.kanade.tachiyomi.extension.paradise-paradise-8:\\mipmap-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\Lando\\.gradle\\daemon\\8.12\\eu.kanade.tachiyomi.extension.paradise-debug-7:\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Lando\\.gradle\\daemon\\8.12\\eu.kanade.tachiyomi.extension.paradise-paradise-8:\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
         "merged": "eu.kanade.tachiyomi.extension.paradise-debug-7:/mipmap-xxhdpi_ic_launcher.png.flat",
         "source": "eu.kanade.tachiyomi.extension.paradise-paradise-8:/mipmap-xxhdpi/ic_launcher.png"
     },
     {
+        "merged": "C:\\Users\\Lando\\.gradle\\daemon\\8.12\\eu.kanade.tachiyomi.extension.paradise-debug-7:\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Lando\\.gradle\\daemon\\8.12\\eu.kanade.tachiyomi.extension.paradise-paradise-8:\\mipmap-xhdpi\\ic_launcher.png"
+    },
+    {
         "merged": "eu.kanade.tachiyomi.extension.paradise-debug-7:/mipmap-hdpi_ic_launcher.png.flat",
         "source": "eu.kanade.tachiyomi.extension.paradise-paradise-8:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\Lando\\.gradle\\daemon\\8.12\\eu.kanade.tachiyomi.extension.paradise-debug-7:\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Lando\\.gradle\\daemon\\8.12\\eu.kanade.tachiyomi.extension.paradise-paradise-8:\\mipmap-xxxhdpi\\ic_launcher.png"
     },
     {
         "merged": "eu.kanade.tachiyomi.extension.paradise-debug-7:/mipmap-mdpi_ic_launcher.png.flat",

@@ -1,2 +1,1 @@
-C:\GIT\keiyoushi_updated\extensions-source\src\ar\paradise\src\eu\kanade\tachiyomi\extension\ar\paradise\Paradise.kt:7:15: Format fixed > [colon-spacing] Missing spacing before ":"
-C:\GIT\keiyoushi_updated\extensions-source\src\ar\paradise\src\eu\kanade\tachiyomi\extension\ar\paradise\Paradise.kt:11:58: Format fixed > [trailing-comma-on-call-site] Unnecessary trailing comma before ")"
+ok
